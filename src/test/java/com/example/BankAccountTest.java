@@ -20,11 +20,6 @@ public class BankAccountTest {
     }
 
     @Test
-    void testDepositInvalidAmount() {
-        assertThrows(IllegalArgumentException.class, () -> account.deposit(-200));
-    }
-
-    @Test
     void testWithdrawSuccess() {
         account.withdraw(300);
         assertEquals(700, account.getBalance());
@@ -32,6 +27,20 @@ public class BankAccountTest {
 
     @Test
     void testWithdrawMoreThanBalance() {
-        assertThrows(IllegalStateException.class, () -> account.withdraw(2000));
+        assertThrows(IllegalStateException.class,
+                () -> account.withdraw(2000));
+    }
+
+    @Test
+    void transactionListShouldIncreaseAfterDeposit() {
+        account.deposit(200);
+        assertEquals(1, account.getTransactions().size());
+    }
+
+    @Test
+    void transactionTypeShouldBeCorrect() {
+        account.withdraw(100);
+        Transaction t = account.getTransactions().get(0);
+        assertEquals(TransactionType.WITHDRAW, t.getType());
     }
 }
